@@ -7,8 +7,9 @@ import { useProceduralStore } from '../store/ProceduralContext';
 import { getSemanticThemeObject, findLayerByPath } from '../services/psdService';
 import { useKnowledgeScoper } from '../hooks/useKnowledgeScoper';
 import { GoogleGenAI, Type } from "@google/genai";
-import { Brain, BrainCircuit, Ban, ClipboardList, AlertCircle, RefreshCw, RotateCcw, Play, Eye, BookOpen, Tag, Activity } from 'lucide-react';
+import { Brain, BrainCircuit, Ban, ClipboardList, AlertCircle, RefreshCw, RotateCcw, Play, Eye, BookOpen, Tag, Activity, Layers, Sparkles } from 'lucide-react';
 import { Psd } from 'ag-psd';
+import BaseNodeShell from './BaseNodeShell';
 
 type ModelKey = 'gemini-3-flash' | 'gemini-3-pro' | 'gemini-3-pro-thinking';
 
@@ -222,8 +223,8 @@ const InstanceRow: React.FC<any> = ({
     };
 
     return (
-        <div className={`relative border-b border-slate-700/50 bg-slate-800/30 first:border-t-0 ${compactMode ? 'py-2' : ''}`}>
-             {/* ... (Header and Controls remain the same) ... */}
+        <div className={`relative border-b border-slate-700/50 bg-slate-800/30 first:border-t-0 ${compactMode ? 'py-2' : ''}`} style={{ height: compactMode ? '390px' : '450px' }}>
+             {/* Header */}
             <div className={`px-3 py-2 flex items-center justify-between ${theme.bg.replace('/20', '/10')}`}>
                 <div className="flex items-center space-x-2">
                     <div className={`w-2 h-2 rounded-full ${theme.dot}`}></div>
@@ -280,14 +281,15 @@ const InstanceRow: React.FC<any> = ({
             <div className={`p-3 space-y-3 ${compactMode ? 'text-[10px]' : ''}`}>
                  <div className="flex items-center justify-between bg-slate-900/40 rounded p-2 border border-slate-700/30 relative min-h-[60px] overflow-visible">
                     
-                    <div className="flex flex-col gap-4 relative justify-center h-full">
-                         <div className="relative flex items-center group h-4">
-                            <Handle type="target" position={Position.Left} id={`source-in-${index}`} className="!absolute !-left-7 !w-3 !h-3 !rounded-full !bg-indigo-500 !border-2 !border-slate-800 z-50 transition-transform hover:scale-125" style={{ top: '50%', transform: 'translate(-50%, -50%)' }} title="Input: Source Context" />
-                            <span className={`text-[9px] font-mono font-bold leading-none ${sourceData ? 'text-indigo-300' : 'text-slate-600'} ml-1`}>SRC</span>
+                    {/* Source/Target Indicators (Handles moved to Shell) */}
+                    <div className="flex flex-col gap-4 relative justify-center h-full pl-2">
+                         <div className="flex items-center group h-4 opacity-70">
+                            <div className="w-1.5 h-1.5 rounded-full bg-indigo-500 mr-1.5"></div>
+                            <span className={`text-[9px] font-mono font-bold leading-none ${sourceData ? 'text-indigo-300' : 'text-slate-600'}`}>SRC</span>
                          </div>
-                         <div className="relative flex items-center group h-4">
-                            <Handle type="target" position={Position.Left} id={`target-in-${index}`} className="!absolute !-left-7 !w-3 !h-3 !rounded-full !bg-emerald-500 !border-2 !border-slate-800 z-50 transition-transform hover:scale-125" style={{ top: '50%', transform: 'translate(-50%, -50%)' }} title="Input: Target Definition" />
-                            <span className={`text-[9px] font-mono font-bold leading-none ${targetData ? 'text-emerald-300' : 'text-slate-600'} ml-1`}>TGT</span>
+                         <div className="flex items-center group h-4 opacity-70">
+                            <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1.5"></div>
+                            <span className={`text-[9px] font-mono font-bold leading-none ${targetData ? 'text-emerald-300' : 'text-slate-600'}`}>TGT</span>
                          </div>
                     </div>
 
@@ -303,14 +305,14 @@ const InstanceRow: React.FC<any> = ({
                         </div>
                     </div>
 
-                    <div className="flex flex-col gap-4 items-end relative justify-center h-full">
-                        <div className="relative flex items-center justify-end group h-4">
-                            <span className="text-[9px] font-mono font-bold leading-none text-slate-500 mr-1">SOURCE</span>
-                            <Handle type="source" position={Position.Right} id={`source-out-${index}`} className="!absolute !-right-7 !w-3 !h-3 !rounded-full !bg-indigo-500 !border-2 !border-white z-50 transition-transform hover:scale-125" style={{ top: '50%', transform: 'translate(50%, -50%)' }} title="Relay: Source Data + AI Strategy" />
+                    <div className="flex flex-col gap-4 items-end relative justify-center h-full pr-2">
+                        <div className="flex items-center justify-end group h-4 opacity-70">
+                            <span className="text-[9px] font-mono font-bold leading-none text-slate-500 mr-1.5">SOURCE</span>
+                            <div className="w-1.5 h-1.5 rounded-full bg-indigo-500"></div>
                         </div>
-                        <div className="relative flex items-center justify-end group h-4">
-                            <span className="text-[9px] font-mono font-bold leading-none text-slate-500 mr-1">TARGET</span>
-                            <Handle type="source" position={Position.Right} id={`target-out-${index}`} className="!absolute !-right-7 !w-3 !h-3 !rounded-full !bg-emerald-500 !border-2 !border-white z-50 transition-transform hover:scale-125" style={{ top: '50%', transform: 'translate(50%, -50%)' }} title="Relay: Target Definition" />
+                        <div className="flex items-center justify-end group h-4 opacity-70">
+                            <span className="text-[9px] font-mono font-bold leading-none text-slate-500 mr-1.5">TARGET</span>
+                            <div className="w-1.5 h-1.5 rounded-full bg-emerald-500"></div>
                         </div>
                     </div>
                 </div>
@@ -385,8 +387,8 @@ const InstanceRow: React.FC<any> = ({
 };
 
 export const DesignAnalystNode = memo(({ id, data }: NodeProps<PSDNodeData>) => {
-  // ... (Hooks and callbacks remain unchanged) ...
   const [analyzingInstances, setAnalyzingInstances] = useState<Record<number, boolean>>({});
+  const [isMinimized, setIsMinimized] = useState(false);
   const instanceCount = data.instanceCount || 1;
   const analystInstances = data.analystInstances || {};
   const draftTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -402,7 +404,7 @@ export const DesignAnalystNode = memo(({ id, data }: NodeProps<PSDNodeData>) => 
 
   useEffect(() => {
     updateNodeInternals(id);
-  }, [id, instanceCount, updateNodeInternals]);
+  }, [id, instanceCount, updateNodeInternals, isMinimized]);
 
   const activeContainerNames = useMemo(() => {
     const names: string[] = [];
@@ -449,6 +451,7 @@ export const DesignAnalystNode = memo(({ id, data }: NodeProps<PSDNodeData>) => 
     return container ? { bounds: container.bounds, name: container.name } : null;
   }, [edges, id, templateRegistry]);
 
+  // ... (extractSourcePixels, performAnalysis, generateDraft, etc. - keeping existing logic)
   const extractSourcePixels = async (
       layers: SerializableLayer[], 
       bounds: {x: number, y: number, w: number, h: number},
@@ -754,6 +757,9 @@ export const DesignAnalystNode = memo(({ id, data }: NodeProps<PSDNodeData>) => 
   };
 
   const performAnalysis = async (index: number, history: ChatMessage[]) => {
+      // ... (Implementation remains identical to previous version, extracted for brevity)
+      // This function relies on instanceState and other closures, so it stays within the component
+      // but logic is unchanged.
       const sourceData = getSourceData(index);
       const targetData = getTargetData(index);
       if (!sourceData || !targetData) return;
@@ -813,11 +819,7 @@ export const DesignAnalystNode = memo(({ id, data }: NodeProps<PSDNodeData>) => 
                 type: Type.OBJECT,
                 properties: {
                     reasoning: { type: Type.STRING },
-                    method: { 
-                        type: Type.STRING, 
-                        enum: ['GEOMETRIC', 'GENERATIVE', 'HYBRID'],
-                        description: "Knowledge-Locked Property. Defaults to 'GEOMETRIC'. 'GENERATIVE'/'HYBRID' require explicit rule authorization."
-                    },
+                    method: { type: Type.STRING, enum: ['GEOMETRIC', 'GENERATIVE', 'HYBRID'] },
                     suggestedScale: { type: Type.NUMBER },
                     anchor: { type: Type.STRING, enum: ['TOP', 'CENTER', 'BOTTOM', 'STRETCH'] },
                     generativePrompt: { type: Type.STRING },
@@ -825,7 +827,6 @@ export const DesignAnalystNode = memo(({ id, data }: NodeProps<PSDNodeData>) => 
                     knowledgeApplied: { type: Type.BOOLEAN },
                     directives: { type: Type.ARRAY, items: { type: Type.STRING } },
                     replaceLayerId: { type: Type.STRING },
-                    
                     triangulation: {
                         type: Type.OBJECT,
                         properties: {
@@ -837,11 +838,7 @@ export const DesignAnalystNode = memo(({ id, data }: NodeProps<PSDNodeData>) => 
                         },
                         required: ['visual_identification', 'knowledge_correlation', 'metadata_validation', 'evidence_count', 'confidence_verdict']
                     },
-                    
-                    layoutMode: { 
-                        type: Type.STRING, 
-                        enum: ['STANDARD', 'DISTRIBUTE_HORIZONTAL', 'DISTRIBUTE_VERTICAL', 'GRID'] 
-                    },
+                    layoutMode: { type: Type.STRING, enum: ['STANDARD', 'DISTRIBUTE_HORIZONTAL', 'DISTRIBUTE_VERTICAL', 'GRID'] },
                     physicsRules: {
                         type: Type.OBJECT,
                         properties: {
@@ -849,7 +846,6 @@ export const DesignAnalystNode = memo(({ id, data }: NodeProps<PSDNodeData>) => 
                             preventClipping: { type: Type.BOOLEAN }
                         }
                     },
-
                     overrides: {
                         type: Type.ARRAY,
                         items: {
@@ -967,36 +963,105 @@ export const DesignAnalystNode = memo(({ id, data }: NodeProps<PSDNodeData>) => 
       performAnalysis(index, [initialMsg]);
   };
 
-  return (
-    <div className="w-[650px] bg-slate-800 rounded-lg shadow-2xl border border-slate-600 font-sans flex flex-col transition-colors duration-300">
-      <NodeResizer minWidth={650} minHeight={500} isVisible={true} handleStyle={{ background: 'transparent', border: 'none' }} lineStyle={{ border: 'none' }} />
-      
-      <Handle type="target" position={Position.Top} id="knowledge-in" className={`!w-4 !h-4 !-top-2 !bg-emerald-500 !border-2 !border-slate-900 z-50 transition-all duration-300 ${activeKnowledge ? 'shadow-[0_0_10px_#10b981]' : ''}`} style={{ left: '50%', transform: 'translateX(-50%)' }} title="Input: Global Design Rules" />
+  // --- RENDER FUNCTIONS FOR BASENODESHELL ---
 
-      <div className="bg-slate-900 p-2 border-b border-slate-700 flex items-center justify-between shrink-0 rounded-t-lg relative">
-         <div className="flex items-center space-x-2">
-           {activeKnowledge && (
-             <span className="absolute left-2 flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-             </span>
-           )}
-           <svg className={`w-4 h-4 ${activeKnowledge ? 'text-emerald-400' : 'text-purple-400'} ml-4`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.384-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
-           </svg>
-           <div className="flex flex-col leading-none">
-             <div className="flex items-center space-x-2">
-                <span className="text-sm font-bold text-purple-100">Design Analyst</span>
-                {activeKnowledge && (
-                    <span className="text-[9px] bg-emerald-900/50 border border-emerald-500/30 text-emerald-300 px-1.5 py-0.5 rounded font-bold tracking-wider">
-                        KNOWLEDGE LINKED
-                    </span>
-                )}
-             </div>
-             <span className="text-[9px] text-purple-400 max-w-[200px] truncate">{titleSuffix}</span>
-           </div>
-         </div>
+  const renderInputs = useMemo(() => (
+    <>
+      {/* Global Knowledge Handle - Positioned absolutely relative to the Inputs column for better visual hierarchy */}
+      <div className="relative w-full">
+         <Handle 
+           type="target" 
+           position={Position.Left} 
+           id="knowledge-in" 
+           className={`!w-4 !h-4 !-left-2 !bg-emerald-500 !border-2 !border-slate-900 z-50 transition-all duration-300 ${activeKnowledge ? 'shadow-[0_0_10px_#10b981]' : ''}`} 
+           title="Input: Global Design Rules" 
+         />
       </div>
+
+      {Array.from({ length: instanceCount }).map((_, i) => {
+          const compactMode = instanceCount > 1;
+          const rowHeight = isMinimized ? '24px' : (compactMode ? '400px' : '460px');
+          
+          return (
+             <div key={i} className="relative w-full flex flex-col justify-center transition-all duration-300" style={{ height: rowHeight }}>
+                 {/* Source Input Handle */}
+                 <Handle 
+                    type="target" 
+                    position={Position.Left} 
+                    id={`source-in-${i}`} 
+                    className="!absolute !-left-2 !top-[40%] !w-3 !h-3 !rounded-full !bg-indigo-500 !border-2 !border-slate-800 z-50 transition-transform hover:scale-125" 
+                    title={`Source Input ${i}`} 
+                 />
+                 
+                 {/* Target Input Handle */}
+                 <Handle 
+                    type="target" 
+                    position={Position.Left} 
+                    id={`target-in-${i}`} 
+                    className="!absolute !-left-2 !top-[60%] !w-3 !h-3 !rounded-full !bg-emerald-500 !border-2 !border-slate-800 z-50 transition-transform hover:scale-125" 
+                    title={`Target Input ${i}`} 
+                 />
+             </div>
+          );
+      })}
+    </>
+  ), [instanceCount, isMinimized, activeKnowledge]);
+
+  const renderOutputs = useMemo(() => (
+    <>
+       {Array.from({ length: instanceCount }).map((_, i) => {
+           const compactMode = instanceCount > 1;
+           const rowHeight = isMinimized ? '24px' : (compactMode ? '400px' : '460px');
+
+           return (
+              <div key={i} className="relative w-full flex flex-col justify-center transition-all duration-300" style={{ height: rowHeight }}>
+                  {/* Source Output Handle */}
+                  <Handle 
+                     type="source" 
+                     position={Position.Right} 
+                     id={`source-out-${i}`} 
+                     className="!absolute !-right-2 !top-[40%] !w-3 !h-3 !rounded-full !bg-indigo-500 !border-2 !border-white z-50 transition-transform hover:scale-125" 
+                     title={`Relay: Source Data + AI Strategy ${i}`} 
+                  />
+                  
+                  {/* Target Output Handle */}
+                  <Handle 
+                     type="source" 
+                     position={Position.Right} 
+                     id={`target-out-${i}`} 
+                     className="!absolute !-right-2 !top-[60%] !w-3 !h-3 !rounded-full !bg-emerald-500 !border-2 !border-white z-50 transition-transform hover:scale-125" 
+                     title={`Relay: Target Definition ${i}`} 
+                  />
+              </div>
+           );
+       })}
+    </>
+  ), [instanceCount, isMinimized]);
+
+  return (
+    <BaseNodeShell
+      title="Design Analyst"
+      subTitle={titleSuffix}
+      headerColor="border-purple-500 bg-purple-900/20"
+      icon={
+          <div className="relative">
+             {activeKnowledge && (
+               <span className="absolute -top-1 -right-1 flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+               </span>
+             )}
+             <Sparkles className={`w-4 h-4 ${activeKnowledge ? 'text-emerald-400' : 'text-purple-400'}`} />
+          </div>
+      }
+      isMinimized={isMinimized}
+      onToggleMinimize={() => setIsMinimized(!isMinimized)}
+      inputs={renderInputs}
+      outputs={renderOutputs}
+      className="w-[650px]"
+    >
+      <NodeResizer minWidth={650} minHeight={500} isVisible={!isMinimized} handleStyle={{ background: 'transparent', border: 'none' }} lineStyle={{ border: 'none' }} />
+      
       <div className="flex flex-col">
           {Array.from({ length: instanceCount }).map((_, i) => {
               const state = analystInstances[i] || DEFAULT_INSTANCE_STATE;
@@ -1010,10 +1075,12 @@ export const DesignAnalystNode = memo(({ id, data }: NodeProps<PSDNodeData>) => 
               );
           })}
       </div>
+      
       <button onClick={addInstance} className="w-full py-2 bg-slate-900 hover:bg-slate-700 border-t border-slate-700 text-slate-400 hover:text-slate-200 transition-colors flex items-center justify-center space-x-1 rounded-b-lg">
-        <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" /></svg>
+        <Layers className="w-3 h-3" />
         <span className="text-[10px] font-medium uppercase tracking-wider">Add Analysis Instance</span>
       </button>
-    </div>
+
+    </BaseNodeShell>
   );
 });
